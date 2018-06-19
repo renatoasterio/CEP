@@ -1,0 +1,11 @@
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\EDNE.exe.config
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\EDNE.exe
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\EDNE.pdb
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\Dapper.dll
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\Dapper.xml
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\obj\Debug\EDNE.csprojResolveAssemblyReference.cache
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\obj\Debug\EDNE.csproj.CoreCompileInputs.cache
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\obj\Debug\EDNE.exe
+C:\Users\Renato Asterio\source\repos\CEP\EDNE\obj\Debug\EDNE.pdb
