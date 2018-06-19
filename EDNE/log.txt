@@ -1,0 +1,8 @@
+
+
+
+Tempo limite expirado. O período de tempo limite foi atingido antes que fosse obtida uma conexão do pool. Isso pode ter ocorrido porque todas as conexões do pool estavam em uso e o tamanho máximo do pool foi atingido.
+{"bairro":"","cidade":"Itaberaba","logradouro":null,"estado_info":{"area_km2":"564.732,642","codigo_ibge":"29","nome":"Bahia"},"cep":"46880000","cidade_info":{"area_km2":"2343,505","codigo_ibge":"2914703"},"estado":"BA"}
+
+Erro de rede ou específico à instância ao estabelecer conexão com o SQL Server. O servidor não foi encontrado ou não estava acessível. Verifique se o nome da instância está correto e se o SQL Server está configurado para permitir conexões remotas. (provider: SQL Network Interfaces, error: 26 - Erro ao Localizar Servidor/Instância Especificada)
+{"bairro":"","cidade":"São Vicente do Sul","logradouro":null,"estado_info":{"area_km2":"281.737,947","codigo_ibge":"43","nome":"Rio Grande do Sul"},"cep":"97420000","cidade_info":{"area_km2":"1175,228","codigo_ibge":"4319802"},"estado":"RS"}

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -16,204 +17,62 @@ namespace EDNE
     {
         static void Main(string[] args)
         {
-            new Thread(new ThreadStart(() => { SP(); })).Start();
-            new Thread(new ThreadStart(PB)).Start();
-            new Thread(new ThreadStart(RJ)).Start();
-            new Thread(new ThreadStart(RS)).Start();
-            new Thread(new ThreadStart(SC)).Start();
-            new Thread(new ThreadStart(RN)).Start();
-            new Thread(new ThreadStart(AC)).Start();
-            new Thread(new ThreadStart(DF)).Start();
-            new Thread(new ThreadStart(MT)).Start();
+            var lista = new Dictionary<int, int>()
+            {
+                { 15135000, 15140000 },
+                { 89890000, 97418000 },
+                { 97420000, 99990000 },
+                { 15140000, 18580000 },
+                { 18590000, 35110000 },
+                { 35112000, 36515000 },
+                { 36520000, 38294000 },
+                { 38295000, 44150000 },
+                { 44160000, 46875000 },
+                { 46880000, 55588000 },
+                { 55590000, 58339000 },
+                { 58340000, 59760000 },
+                { 59770000, 64335000 },
+                { 64340000, 65609999 },
+                { 65610000, 69260000 },
+                { 69265000, 76352000 },
+                { 76355000, 78630000 },
+                { 78635000, 85267000 },
+                { 85270000, 87830000 },
+                { 87840000, 89888000 }
+            };
+
+            foreach (var item in lista)
+                new Thread(new ThreadStart(() => { Busca(item.Key, item.Value); })).Start();
 
             //CorreiosService.consultaCEP c = new CorreiosService.consultaCEP("08260030");
             //var end = new CorreiosService.AtendeClienteClient().consultaCEP("08260030");
         }
 
-        static void SP()
+        static void Busca(int inicio, int fim)
         {
-            for (int i = 1135330; i < 19999999; i++)
+            try
             {
-                using (HttpClient cli = new HttpClient())
+                for (int i = inicio; i < fim; i++)
                 {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
+                    using (HttpClient cli = new HttpClient())
                     {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
+                        var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
+                        if (resp.IsSuccessStatusCode)
                         {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
+                            var r = resp.Content.ReadAsStringAsync().Result;
+                            var end = JsonConvert.DeserializeObject<Endereco>(r);
+                            if (end != null)
+                            {
+                                Insert(end);
+                                Console.WriteLine(end.cep);
+                            }
                         }
                     }
                 }
             }
-        }
-        static void PB()
-        {
-            for (int i = 58138332; i < 58999999; i++)
+            catch (Exception)
             {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void RJ()
-        {
-            for (int i = 20132629; i < 28999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void RS()
-        {
-
-            for (int i = 9132710; i < 99999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void SC()
-        {
-
-            for (int i = 88136119; i < 89999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void RN()
-        {
-
-            for (int i = 59134857; i < 59999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void AC()
-        {
-
-            for (int i = 69977375; i < 69999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void DF()
-        {
-
-            for (int i = 70130003; i < 73699999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
-            }
-        }
-        static void MT()
-        {
-
-            for (int i = 78139038; i < 78999999; i++)
-            {
-                using (HttpClient cli = new HttpClient())
-                {
-                    var resp = cli.GetAsync("https://api.postmon.com.br/v1/cep/" + i.ToString().PadLeft(8, '0')).Result;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var r = resp.Content.ReadAsStringAsync().Result;
-                        var end = JsonConvert.DeserializeObject<Endereco>(r);
-                        if (end != null)
-                        {
-                            Insert(end);
-                            Console.WriteLine(end.cep);
-                        }
-                    }
-                }
+                File.AppendAllText(@"C:\Users\Renato Asterio\source\repos\CEP\EDNE\cep.txt", Environment.NewLine + $"{inicio}, {fim}");
             }
         }
 
@@ -262,7 +121,7 @@ namespace EDNE
             }
             catch (Exception e)
             {
-
+                File.AppendAllText(@"C:\Users\Renato Asterio\source\repos\CEP\EDNE\log.txt", Environment.NewLine + Environment.NewLine + e.Message + Environment.NewLine + JsonConvert.SerializeObject(end));
             }
 
         }
