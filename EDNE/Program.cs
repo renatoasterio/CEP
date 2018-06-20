@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,44 +16,40 @@ namespace EDNE
 {
     class Program
     {
+        static bool close = false;
+        private static ManualResetEvent mre = new ManualResetEvent(false);
+        private static Tuple<int, int>[] Ultimos;
+
         static void Main(string[] args)
         {
-            var lista = new Dictionary<int, int>()
-            {
-                { 15135000, 15140000 },
-                { 89890000, 97418000 },
-                { 97420000, 99990000 },
-                { 15140000, 18580000 },
-                { 18590000, 35110000 },
-                { 35112000, 36515000 },
-                { 36520000, 38294000 },
-                { 38295000, 44150000 },
-                { 44160000, 46875000 },
-                { 46880000, 55588000 },
-                { 55590000, 58339000 },
-                { 58340000, 59760000 },
-                { 59770000, 64335000 },
-                { 64340000, 65609999 },
-                { 65610000, 69260000 },
-                { 69265000, 76352000 },
-                { 76355000, 78630000 },
-                { 78635000, 85267000 },
-                { 85270000, 87830000 },
-                { 87840000, 89888000 }
-            };
+            string textFile = File.ReadAllText(@"C:\github\CEP\EDNE\cep.json");
+            Tuple<int, int>[] lista = JsonConvert.DeserializeObject<Tuple<int, int>[]>(textFile);
+            Ultimos = new Tuple<int, int>[lista.Length];
 
+            int c = 0;
             foreach (var item in lista)
-                new Thread(new ThreadStart(() => { Busca(item.Key, item.Value); })).Start();
+            {
+                Thread t = new Thread(() => Busca(item.Item1, item.Item2, c));
+                t.Name = "Thread_" + c;
+                t.Start();
+                Thread.Sleep(100);
+                c++;
+            }
 
-            //CorreiosService.consultaCEP c = new CorreiosService.consultaCEP("08260030");
-            //var end = new CorreiosService.AtendeClienteClient().consultaCEP("08260030");
+            mre.Set();
+            SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
+            while (!close)
+            {
+
+            }
         }
 
-        static void Busca(int inicio, int fim)
+        static void Busca(int inicio, int fim, int index)
         {
-            try
+            for (int i = inicio; i < fim; i++)
             {
-                for (int i = inicio; i < fim; i++)
+                Ultimos[index] = new Tuple<int, int>(i, fim);
+                try
                 {
                     using (HttpClient cli = new HttpClient())
                     {
@@ -69,10 +66,10 @@ namespace EDNE
                         }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                File.AppendAllText(@"C:\Users\Renato Asterio\source\repos\CEP\EDNE\cep.txt", Environment.NewLine + $"{inicio}, {fim}");
+                catch (Exception)
+                {
+                    File.AppendAllText(@"C:\github\CEP\EDNE\erro.txt", Environment.NewLine + $"{inicio}, {fim}");
+                }
             }
         }
 
@@ -121,10 +118,40 @@ namespace EDNE
             }
             catch (Exception e)
             {
-                File.AppendAllText(@"C:\Users\Renato Asterio\source\repos\CEP\EDNE\log.txt", Environment.NewLine + Environment.NewLine + e.Message + Environment.NewLine + JsonConvert.SerializeObject(end));
+                File.AppendAllText(@"C:\github\CEP\EDNE\log.txt", Environment.NewLine + Environment.NewLine + e.Message + Environment.NewLine + JsonConvert.SerializeObject(end));
             }
-
         }
+
+        private static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
+        {
+            File.WriteAllText(@"C:\github\CEP\EDNE\cep.json", JsonConvert.SerializeObject(Ultimos));
+            Thread.Sleep(2000);
+            return close = true;
+        }
+
+
+        #region unmanaged
+        // Declare the SetConsoleCtrlHandler function
+        // as external and receiving a delegate.
+        [DllImport("Kernel32")]
+        public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+
+        // A delegate type to be used as the handler routine
+        // for SetConsoleCtrlHandler.
+        public delegate bool HandlerRoutine(CtrlTypes CtrlType);
+
+        // An enumerated type for the control messages
+        // sent to the handler routine.
+        public enum CtrlTypes
+        {
+
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT,
+            CTRL_CLOSE_EVENT,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT
+        }
+        #endregion
     }
 
     public class Endereco
